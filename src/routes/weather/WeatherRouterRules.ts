@@ -1,5 +1,6 @@
 import { body } from 'express-validator'
 
 export default {
-  get: [body('city').not().isEmpty()],
+  weather_id: [body('city').not().isEmpty()],
+  weather_all_test: [],
 }
