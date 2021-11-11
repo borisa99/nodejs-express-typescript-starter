@@ -7,7 +7,7 @@ export class WeatherController {
   constructor() {
     this.weatherService = new WeatherService()
   }
-  public async get(req: Request, res: Response): Promise<void> {
+  public get = async (req: Request, res: Response): Promise<void> => {
     try {
       const { city } = req.body
       serviceResponseHandler(res, await this.weatherService.get(city))
