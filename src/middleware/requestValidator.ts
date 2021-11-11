@@ -18,19 +18,17 @@ export const validate = async (
   }
 
   const baseUrlArray = originalUrl.split('/').splice(1)
-  const name = baseUrlArray[1]
+
+  const keyExtension = baseUrlArray.splice(2).join('_')
   const key =
-    baseUrlArray.length > 1
-      ? baseUrlArray.splice(1).join('_')
-      : req.method.toLocaleLowerCase()
+    req.method.toLocaleLowerCase() + (keyExtension ? '_' + keyExtension : '')
 
-  const path = `../routes/${name}/${name}RouterRules`
+  const name = baseUrlArray[1]
+  const path = `../routes/${name}/${name}.router.rules`
   const validations = await require(path)
-
+  const validationRules = validations.default[key] ?? []
   await Promise.all(
-    validations.default[key].map((validation: ValidationChain) =>
-      validation.run(req)
-    )
+    validationRules.map((validation: ValidationChain) => validation.run(req))
   )
 
   const errors = validationResult(req)
