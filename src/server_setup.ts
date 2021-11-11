@@ -3,7 +3,7 @@ import cors from 'cors'
 import { validate } from './middleware/requestValidator'
 // Create the express app
 const app = express()
-const router = express.Router()
+const expressRouter = express.Router()
 
 // Middleware
 app.use(express.json())
@@ -13,19 +13,25 @@ app.get('/health', (req: Request, res: Response) => {
   res.send('OK')
 })
 
-const customRouterInstance = {
-  get(routeName: string, func: (req: Request, res: Response) => void) {
-    router.get(routeName, validate, func)
-  },
+const router = {
   use(routeName: string, func: (req: Request, res: Response) => void) {
-    router.use(routeName, validate, func)
+    expressRouter.use(routeName, validate, func)
   },
-
+  get(routeName: string, func: (req: Request, res: Response) => void) {
+    expressRouter.get(routeName, validate, func)
+  },
   post(routeName: string, func: (req: Request, res: Response) => void) {
-    router.post(routeName, validate, func)
+    expressRouter.post(routeName, validate, func)
   },
-  getRouter() {
-    return router
+  put(routeName: string, func: (req: Request, res: Response) => void) {
+    expressRouter.put(routeName, validate, func)
+  },
+  delete(routeName: string, func: (req: Request, res: Response) => void) {
+    expressRouter.delete(routeName, validate, func)
+  },
+  getInstance() {
+    return expressRouter
   },
 }
-export { app, router, customRouterInstance }
+
+export { app, expressRouter, router }

@@ -1,8 +1,8 @@
 // import { Request, Response } from 'express'
-import { customRouterInstance } from '../../server_setup'
+import { router } from '../../server_setup'
 import { weatherController } from '../../controllers'
 
-customRouterInstance.get('/:id', weatherController.get)
-customRouterInstance.get('/all/test', weatherController.get)
+router.get('/:id', weatherController.get)
+router.get('/all/test', weatherController.get)
 
-export default customRouterInstance.getRouter()
+export default router.getInstance()
