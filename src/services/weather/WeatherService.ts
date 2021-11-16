@@ -1,6 +1,6 @@
 import { Service } from 'typedi'
 import Weather from '@models/Weather'
-import { ServiceResponse } from '@models/ServiceResponse'
+import ServiceResponse from '@models/ServiceResponse'
 import { IWeatherService } from './IWeatherService'
 
 @Service()
