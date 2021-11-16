@@ -4,7 +4,7 @@ import { ServiceResponse } from '@models/ServiceResponse'
 import { IWeatherService } from './IWeatherService'
 
 @Service()
-export default class WeatherService implements IWeatherService {
+export class WeatherService implements IWeatherService {
   get(city: string): ServiceResponse<Weather> {
     const response = new ServiceResponse<Weather>()
     response.payload = {

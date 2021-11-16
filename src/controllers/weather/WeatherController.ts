@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { Service } from 'typedi'
-import WeatherService from '@services/weather/WeatherService'
+import { WeatherService } from '@services/weather/WeatherService'
 import { serviceResponseHandler } from '@shared/serviceResponseHandler'
 
 @Service()
