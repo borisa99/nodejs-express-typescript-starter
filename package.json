@@ -9,7 +9,7 @@
     "start": "npm run build && node dist/index.js",
     "lint": "eslint --ext .js,.ts .",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
-    "knex":"knex"
+    "knex": "knex --knexfile src/database/knexfile.ts"
   },
   "author": "Borisa Krstic",
   "license": "ISC",
