@@ -1,4 +1,4 @@
-export default interface RefreshToken {
+export interface RefreshToken {
   refresh_token: string
   expires_at: Date
   account_id: string

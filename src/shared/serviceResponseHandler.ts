@@ -1,5 +1,5 @@
 import { Response } from 'express'
-import ServiceResponse from '@models/ServiceResponse'
+import { ServiceResponse } from '@models/ServiceResponse'
 
 export const serviceResponseHandler = (
   res: Response,

@@ -1,4 +1,4 @@
-export default interface AccountRole {
+export interface AccountRole {
   id: string
   account_id: string
   role: string

@@ -1,4 +1,4 @@
-export default interface GetWeather {
+export interface Weather {
   city: string
   degrees: number
 }

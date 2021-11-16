@@ -1,4 +1,4 @@
-export default interface Role {
+export interface Role {
   role: string
   comment: string
 }
