@@ -1,6 +1,9 @@
+import { Service } from 'typedi'
 import Weather from '../../models/Weather'
 import { ServiceResponse } from '../../models/ServiceResponse'
 import { IWeatherService } from './IWeatherService'
+
+@Service()
 export default class WeatherService implements IWeatherService {
   get(city: string): ServiceResponse<Weather> {
     const response = new ServiceResponse<Weather>()

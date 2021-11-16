@@ -1,3 +1,5 @@
+import 'reflect-metadata'
+
 import dotenv from 'dotenv'
 import { app } from './server_setup'
 import { initRoutes } from './routes'

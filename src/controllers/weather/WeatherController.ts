@@ -1,12 +1,12 @@
 import { Request, Response } from 'express'
+import { Service } from 'typedi'
 import WeatherService from '../../services/weather/WeatherService'
 import { serviceResponseHandler } from '../../helpers/serviceResponseHandler'
 
+@Service()
 export class WeatherController {
-  private weatherService: WeatherService
-  constructor() {
-    this.weatherService = new WeatherService()
-  }
+  constructor(private readonly weatherService: WeatherService) {}
+
   public get = async (req: Request, res: Response): Promise<void> => {
     try {
       const { city } = req.body
