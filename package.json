@@ -4,9 +4,9 @@
   "description": "Starter project for scalable nodjes-express-typescript",
   "main": "/dist/index.js",
   "scripts": {
-    "dev": "nodemon src/index.ts",
+    "dev": "nodemon -e ts,js --exec ts-node -r tsconfig-paths/register src/index.ts",
     "build": "tsc",
-    "start": "npm run build && node dist/index.js",
+    "start": "npm run build && node -r tsconfig-paths/register -r ts-node/register dist/index.js ",
     "lint": "eslint --ext .js,.ts .",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
     "knex": "knex --knexfile src/database/knexfile.ts"
@@ -22,7 +22,6 @@
     "knex": "^0.95.14",
     "pg": "^8.7.1",
     "reflect-metadata": "^0.1.13",
-    "tsconfig-paths": "^3.11.0",
     "tslib": "^2.3.1",
     "typedi": "^0.10.0"
   },
@@ -38,6 +37,7 @@
     "nodemon": "^2.0.14",
     "prettier": "^2.4.1",
     "ts-node": "^10.4.0",
+    "tsconfig-paths": "^3.11.0",
     "typescript": "^4.4.4"
   }
 }
