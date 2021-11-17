@@ -15,4 +15,15 @@ export class AuthController {
       res.status(500).send(error)
     }
   }
+  public activate = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { ticket } = req.query
+      serviceResponseHandler(
+        res,
+        await this.authService.activate(<string>ticket)
+      )
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
 }

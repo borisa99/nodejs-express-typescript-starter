@@ -14,13 +14,21 @@ import { RefreshToken } from '@/models/RefreshToken'
 
 import { hashPassword } from '@shared/bcrypt'
 import { mailer } from '@shared/email'
-import { generateToken } from '@shared/jwt'
-import { JWT } from '@/shared/types/auth/JWT'
 @Service()
 export class AuthService implements IAuthService {
+  async activate(ticket: string): Promise<ServiceResponse<string>> {
+    const response: ServiceResponse<string> = new ServiceResponse<string>()
+    try {
+      response.payload = ticket
+    } catch (error: any) {
+      response.status = 500
+      response.error = error.message
+    }
+    return response
+  }
   // Register new user
-  async register(user: RegisterUser): Promise<ServiceResponse<JWT>> {
-    const response: ServiceResponse<JWT> = new ServiceResponse<JWT>()
+  async register(user: RegisterUser): Promise<ServiceResponse<string>> {
+    const response: ServiceResponse<string> = new ServiceResponse<string>()
     try {
       //Check if user already exists
       const account = await db<Account>('accounts')
@@ -66,7 +74,7 @@ export class AuthService implements IAuthService {
         from: 'from@me.com',
         to: user.email,
         subject: 'Activate account',
-        html: `<a href="http://${process.env.HOST}/auth/activate?ticket=${ticket}">Activate account</a>`,
+        html: `<a href="http://${process.env.HOST}/api/auth/activate?ticket=${ticket}">Activate account</a>`,
       })
 
       // Create refresh token
@@ -77,20 +85,7 @@ export class AuthService implements IAuthService {
         account_id,
       })
 
-      // Return token
-      const token = await generateToken({
-        id: user_id,
-        email: user.email,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        avatar_url: user.avatar_url,
-        roles: user.roles,
-      })
-
-      response.payload = {
-        token,
-        refresh_token,
-      }
+      response.payload = 'success'
     } catch (error: any) {
       response.status = 500
       response.error = error.message
