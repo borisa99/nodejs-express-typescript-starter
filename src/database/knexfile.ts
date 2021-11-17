@@ -1,28 +1,29 @@
 import { Knex } from 'knex'
 
-import dotenv from 'dotenv'
-import path from 'path'
+import * as dotenv from 'dotenv'
+import { resolve } from 'path'
 
-dotenv.config({ path: path.resolve(__dirname, '../../.env') })
+dotenv.config({ path: resolve(__dirname, '../../.env') })
 
 const config: Knex.Config = {
-  client: 'pg',
+  client: process.env.DATABASE_CLENT,
   connection: {
-    connectionString: process.env.DATABASE_URL,
+    connectionString: process.env.DATABASE_URL
   },
   pool: {
     min: 2,
-    max: 10,
+    max: 10
   },
   migrations: {
     extension: 'ts',
     tableName: 'knex_migrations',
-    directory: 'migrations',
+    directory: 'migrations'
   },
   seeds: {
     extension: 'ts',
-    directory: 'seeds',
-  },
+    directory: 'seeds'
+  }
 }
+
 
 export default config
