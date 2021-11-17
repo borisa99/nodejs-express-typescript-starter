@@ -10,6 +10,8 @@ import { Account } from '@/models/Account'
 import { User } from '@/models/User'
 
 import { hashPassword } from '@shared/bcrypt'
+import { AccountRole } from '@/models/AccountRole'
+import { RoleValue } from '@/models/RoleValue'
 
 @Service()
 export class AuthService implements IAuthService {
@@ -25,7 +27,7 @@ export class AuthService implements IAuthService {
         response.error = 'Email already exists'
         return response
       }
-
+      //TODO - check if requested roles are valid
       //Create new user
       const [user_id]: string = await db<User>('users').returning('id').insert({
         first_name: user.first_name,
@@ -44,12 +46,15 @@ export class AuthService implements IAuthService {
           ticket,
           ticket_expires_at: dayjs().add(1, 'day').toDate(),
         })
-      console.log(
-        '🚀 ~ file: AuthService.ts ~ line 39 ~ AuthService ~ register ~ account_id',
-        account_id
-      )
 
       // Insert account roles
+      const accountRoles = user.roles.map((role: RoleValue) => {
+        return {
+          account_id,
+          role,
+        }
+      })
+      await db<AccountRole>('account_roles').insert(accountRoles)
 
       response.payload = 'Success'
     } catch (error: any) {
