@@ -16,10 +16,35 @@ import { hashPassword } from '@shared/bcrypt'
 import { mailer } from '@shared/email'
 @Service()
 export class AuthService implements IAuthService {
+  // Activate user account
   async activate(ticket: string): Promise<ServiceResponse<string>> {
     const response: ServiceResponse<string> = new ServiceResponse<string>()
     try {
-      response.payload = ticket
+      // Get account by ticket
+      const account = await db<Account>('accounts').where({ ticket }).first()
+
+      // if account not found
+      if (!account) {
+        response.status = 400
+        response.error = 'Account does not exist'
+        return response
+      }
+      // if account is already activated
+      if (
+        account.ticket_expires_at &&
+        account.ticket_expires_at < dayjs().toDate()
+      ) {
+        response.status = 400
+        response.error = 'Ticket expired'
+        return response
+      }
+      // Activate account
+      await db<Account>('accounts').where({ ticket }).update({
+        ticket: null,
+        ticket_expires_at: null,
+        is_active: true,
+      })
+      response.payload = 'success'
     } catch (error: any) {
       response.status = 500
       response.error = error.message
