@@ -12,6 +12,8 @@ export default {
       .withMessage('Roles must be valid array of available roles'),
   ],
   get_activate: [
-    query('ticket').notEmpty().withMessage('Ticket must be valid'),
+    query('ticket')
+      .notEmpty()
+      .withMessage('Ticket query parameter is required'),
   ],
 }
