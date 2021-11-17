@@ -13,6 +13,8 @@ import { hashPassword } from '@shared/bcrypt'
 import { AccountRole } from '@/models/AccountRole'
 import { RoleValue } from '@/models/RoleValue'
 
+import { mailer } from '@shared/email'
+import { RefreshToken } from '@/models/RefreshToken'
 @Service()
 export class AuthService implements IAuthService {
   async register(user: RegisterUser): Promise<ServiceResponse<string>> {
@@ -28,6 +30,7 @@ export class AuthService implements IAuthService {
         return response
       }
       //TODO - check if requested roles are valid
+
       //Create new user
       const [user_id]: string = await db<User>('users').returning('id').insert({
         first_name: user.first_name,
@@ -56,6 +59,22 @@ export class AuthService implements IAuthService {
       })
       await db<AccountRole>('account_roles').insert(accountRoles)
 
+      //Send email
+      await mailer.sendMail({
+        from: 'from@me.com',
+        to: user.email,
+        subject: 'Activate account',
+        html: `<a href="http://${process.env.HOST}/auth/activate?ticket=${ticket}">Activate account</a>`,
+      })
+
+      // Create refresh token
+      const refresh_token = uuidv4()
+      await db<RefreshToken>('refresh_tokens').insert({
+        refresh_token,
+        expires_at: dayjs().add(1, 'day').toDate(),
+        account_id,
+      })
+      
       response.payload = 'Success'
     } catch (error: any) {
       response.status = 500
