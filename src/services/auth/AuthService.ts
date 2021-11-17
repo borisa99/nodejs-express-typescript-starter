@@ -11,6 +11,11 @@ export class AuthService implements IAuthService {
   async register(user: RegisterUser): Promise<ServiceResponse<string>> {
     const response: ServiceResponse<string> = new ServiceResponse<string>()
     try {
+      console.log(
+        '🚀 ~ file: AuthService.ts ~ line 12 ~ AuthService ~ register ~ user',
+        user
+      )
+
       //Check if user already exists
       const account = await db<Account>('accounts')
         .where({ email: user.email })
