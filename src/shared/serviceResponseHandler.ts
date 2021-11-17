@@ -6,7 +6,7 @@ export const serviceResponseHandler = (
   data: ServiceResponse<any>
 ) => {
   if (data.status !== 200) {
-    res.status(data.status).send(data)
+    return res.status(data.status).send(data)
   }
-  res.send(data)
+  return res.send(data)
 }
