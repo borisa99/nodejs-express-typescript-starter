@@ -16,8 +16,7 @@ export async function up(knex: Knex): Promise<void> {
 
   //CREATE roles TABLE
   await knex.schema.createTable('roles', table => {
-    table.string('role').primary().notNullable()
-    table.string('comment').notNullable()
+    table.string('value').primary().notNullable()
   })
 
   //CREATE accounts TABLE
@@ -38,7 +37,7 @@ export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable('account_roles', table => {
     table.uuid('id').primary().defaultTo(knex.raw('public.gen_random_uuid()'))
     table.uuid('account_id').notNullable().references('id').inTable('accounts')
-    table.string('role').notNullable().references('role').inTable('roles')
+    table.string('role').notNullable().references('value').inTable('roles')
     table.timestamp('created_at').defaultTo(knex.fn.now())
     table.timestamp('updated_at').defaultTo(knex.fn.now())
     table.index('account_id')
