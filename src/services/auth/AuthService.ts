@@ -15,11 +15,12 @@ import { RefreshToken } from '@/models/RefreshToken'
 import { hashPassword } from '@shared/bcrypt'
 import { mailer } from '@shared/email'
 import { generateToken } from '@shared/jwt'
+import { JWT } from '@/shared/types/auth/JWT'
 @Service()
 export class AuthService implements IAuthService {
   // Register new user
-  async register(user: RegisterUser): Promise<ServiceResponse<string>> {
-    const response: ServiceResponse<string> = new ServiceResponse<string>()
+  async register(user: RegisterUser): Promise<ServiceResponse<JWT>> {
+    const response: ServiceResponse<JWT> = new ServiceResponse<JWT>()
     try {
       //Check if user already exists
       const account = await db<Account>('accounts')
@@ -75,9 +76,21 @@ export class AuthService implements IAuthService {
         expires_at: dayjs().add(1, 'day').toDate(),
         account_id,
       })
-      console.log(await generateToken({}))
 
-      response.payload = 'Success'
+      // Return token
+      const token = await generateToken({
+        id: user_id,
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        avatar_url: user.avatar_url,
+        roles: user.roles,
+      })
+
+      response.payload = {
+        token,
+        refresh_token,
+      }
     } catch (error: any) {
       response.status = 500
       response.error = error.message
