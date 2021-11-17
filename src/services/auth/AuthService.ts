@@ -8,15 +8,16 @@ import db from '@/shared/db'
 import { ServiceResponse } from '@/models/ServiceResponse'
 import { Account } from '@/models/Account'
 import { User } from '@/models/User'
-
-import { hashPassword } from '@shared/bcrypt'
 import { AccountRole } from '@/models/AccountRole'
 import { RoleValue } from '@/models/RoleValue'
-
-import { mailer } from '@shared/email'
 import { RefreshToken } from '@/models/RefreshToken'
+
+import { hashPassword } from '@shared/bcrypt'
+import { mailer } from '@shared/email'
+import { generateToken } from '@shared/jwt'
 @Service()
 export class AuthService implements IAuthService {
+  // Register new user
   async register(user: RegisterUser): Promise<ServiceResponse<string>> {
     const response: ServiceResponse<string> = new ServiceResponse<string>()
     try {
@@ -74,7 +75,8 @@ export class AuthService implements IAuthService {
         expires_at: dayjs().add(1, 'day').toDate(),
         account_id,
       })
-      
+      console.log(await generateToken({}))
+
       response.payload = 'Success'
     } catch (error: any) {
       response.status = 500
