@@ -6,12 +6,27 @@ import db from './db'
 
 import { RefreshToken } from '@/models/RefreshToken'
 
-export const generateToken = async (
-  tokenPayload: TokenPayload
-): Promise<string> => {
-  return await jwt.sign(tokenPayload, <string>process.env.JWT_SECRET, {
-    expiresIn: '1d',
-  })
+export const generateTokenPayload = (account_id: string): TokenPayload => {
+  const tokenPayload: TokenPayload = {
+    id: account_id,
+    email: '',
+    first_name: '',
+    last_name: '',
+    avatar_url: '',
+    roles: [],
+  }
+
+  return tokenPayload
+}
+
+export const generateToken = async (account_id: string): Promise<string> => {
+  return await jwt.sign(
+    await generateTokenPayload(account_id),
+    <string>process.env.JWT_SECRET,
+    {
+      expiresIn: '1d',
+    }
+  )
 }
 
 export const generateRefreshToken = async (
