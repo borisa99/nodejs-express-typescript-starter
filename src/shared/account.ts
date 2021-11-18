@@ -23,6 +23,7 @@ export const validateAccount = (
     response.message = 'Account is active'
     response.is_valid = false
   }
+
   return response
 }
 

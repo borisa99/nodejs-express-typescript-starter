@@ -8,4 +8,8 @@ export interface IAuthService {
   login(email: string, password: string): Promise<ServiceResponse<JWT>>
   refresh(refreshToken: string): Promise<ServiceResponse<JWT>>
   requestPasswordReset(email: string): Promise<ServiceResponse<string>>
+  resetPassword(
+    ticket: string,
+    password: string
+  ): Promise<ServiceResponse<string>>
 }

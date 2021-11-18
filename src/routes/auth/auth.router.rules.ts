@@ -32,4 +32,11 @@ export default {
   post_request_reset_password: [
     body('email').notEmpty().isEmail().withMessage('Email must be valid'),
   ],
+  post_reset_password: [
+    body('ticket').notEmpty().isString().withMessage('Ticket must be valid'),
+    body('password')
+      .notEmpty()
+      .isString()
+      .withMessage('Password must be valid'),
+  ],
 }

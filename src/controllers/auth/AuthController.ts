@@ -56,4 +56,15 @@ export class AuthController {
       res.status(500).send(error)
     }
   }
+  public resetPassword = async (req: Request, res: Response): Promise<void> => {
+    const { ticket, password } = req.body
+    try {
+      serviceResponseHandler(
+        res,
+        await this.authService.resetPassword(<string>ticket, password)
+      )
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
 }

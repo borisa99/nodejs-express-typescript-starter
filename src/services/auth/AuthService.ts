@@ -20,6 +20,48 @@ import { validateAccount, updateTicket, isTicketValid } from '@/shared/account'
 import { AccountValidation } from '@/shared/types/auth/AccountValiation'
 @Service()
 export class AuthService implements IAuthService {
+  async resetPassword(
+    ticket: string,
+    password: string
+  ): Promise<ServiceResponse<string>> {
+    const response: ServiceResponse<string> = new ServiceResponse<string>()
+    try {
+      // Get account by ticket
+      const account = await db<Account>('accounts').where({ ticket }).first()
+
+      const accountValidation: AccountValidation = validateAccount(
+        true,
+        account
+      )
+      // if account not found
+      if (!accountValidation.is_valid) {
+        response.status = 400
+        response.error = accountValidation.message
+        return response
+      }
+
+      // if ticket is expired
+      if (isTicketValid(account?.ticket_expires_at)) {
+        response.status = 400
+        response.error = 'Ticket is expired'
+        return response
+      }
+
+      // Activate account
+      await updateTicket(account?.id)
+      // Update password
+      await db<Account>('accounts')
+        .where({ id: account?.id })
+        .update({
+          password_hash: await hashPassword(password),
+        })
+      response.payload = 'success'
+    } catch (error: any) {
+      response.status = 500
+      response.error = error.message
+    }
+    return response
+  }
   async requestPasswordReset(email: string): Promise<ServiceResponse<string>> {
     const response: ServiceResponse<string> = new ServiceResponse<string>()
     try {
