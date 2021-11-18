@@ -10,7 +10,6 @@ import { Account } from '@/models/Account'
 import { User } from '@/models/User'
 import { AccountRole } from '@/models/AccountRole'
 import { RoleValue } from '@/models/RoleValue'
-import { RefreshToken } from '@/models/RefreshToken'
 
 import { hashPassword } from '@shared/bcrypt'
 import { mailer } from '@shared/email'
@@ -100,14 +99,6 @@ export class AuthService implements IAuthService {
         to: user.email,
         subject: 'Activate account',
         html: `<a href="http://${process.env.HOST}/api/auth/activate?ticket=${ticket}">Activate account</a>`,
-      })
-
-      // Create refresh token
-      const refresh_token = uuidv4()
-      await db<RefreshToken>('refresh_tokens').insert({
-        refresh_token,
-        expires_at: dayjs().add(1, 'day').toDate(),
-        account_id,
       })
 
       response.payload = 'success'
