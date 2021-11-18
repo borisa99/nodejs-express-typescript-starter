@@ -18,6 +18,25 @@ import { generateRefreshToken, generateToken } from '@/shared/jwt'
 import { RefreshToken } from '@/models/RefreshToken'
 @Service()
 export class AuthService implements IAuthService {
+  async requestPasswordReset(email: string): Promise<ServiceResponse<string>> {
+    const response: ServiceResponse<string> = new ServiceResponse<string>()
+    try {
+      // Get account by email
+      const account = await db<Account>('accounts').where({ email }).first()
+      // if account not found
+      if (!account) {
+        response.status = 400
+        response.error = 'Account does not exist'
+      }
+      // if account is already activated
+
+      return response
+    } catch (error: any) {
+      response.status = 500
+      response.error = error.message
+    }
+    return response
+  }
   async refresh(refresh_token: string): Promise<ServiceResponse<JWT>> {
     const response: ServiceResponse<JWT> = new ServiceResponse<JWT>()
     try {
