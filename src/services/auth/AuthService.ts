@@ -26,6 +26,7 @@ export class AuthService implements IAuthService {
       // Get account by email
       const account = await db<Account>('accounts').where({ email }).first()
 
+      // if account not found
       const accountValidation: AccountValidation = validateAccount(
         true,
         account
@@ -39,7 +40,23 @@ export class AuthService implements IAuthService {
       const ticket = uuidv4()
       await updateTicket(account?.id, ticket)
 
-      response.payload = ticket
+      // Send email
+      await emailClient.send({
+        template: 'lost-password',
+        message: {
+          to: account?.email,
+          headers: {
+            'x-ticket': {
+              prepared: true,
+              value: ticket,
+            },
+          },
+        },
+        locals: {
+          ticket,
+        },
+      })
+      response.payload = 'Success'
     } catch (error: any) {
       response.status = 500
       response.error = error.message
