@@ -52,11 +52,11 @@ export class AuthService implements IAuthService {
     try {
       // Get account by ticket
       const account = await db<Account>('accounts').where({ ticket }).first()
-
+      const frontend_url = process.env.FRONTEND_URL
       // if account not found
       if (!account) {
-        response.status = 400
-        response.error = 'Account does not exist'
+        response.status = 302
+        response.payload = frontend_url + '/not-found'
         return response
       }
       // if account is already activated
@@ -64,8 +64,8 @@ export class AuthService implements IAuthService {
         account.ticket_expires_at &&
         account.ticket_expires_at < dayjs().toDate()
       ) {
-        response.status = 400
-        response.error = 'Ticket expired'
+        response.status = 302
+        response.payload = frontend_url + '/already-active'
         return response
       }
       // Activate account
@@ -74,7 +74,8 @@ export class AuthService implements IAuthService {
         ticket_expires_at: null,
         is_active: true,
       })
-      response.payload = 'success'
+      response.status = 302
+      response.payload = frontend_url + '/success'
     } catch (error: any) {
       response.status = 500
       response.error = error.message
