@@ -26,4 +26,12 @@ export class AuthController {
       res.status(500).send(error)
     }
   }
+  public login = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { email, password } = req.body
+      serviceResponseHandler(res, await this.authService.login(email, password))
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
 }

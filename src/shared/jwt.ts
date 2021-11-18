@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { v4 as uuidv4 } from 'uuid'
+import dayjs from 'dayjs'
 
 import { TokenPayload } from './types/auth/TokenPayload'
 import db from './db'
@@ -40,6 +41,7 @@ export const generateRefreshToken = async (
     .returning('refresh_token')
     .insert({
       refresh_token: uuidv4(),
+      expires_at: dayjs().add(1, 'day').toDate(),
       account_id,
     })
   return refreshToken
