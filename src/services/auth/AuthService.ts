@@ -12,7 +12,7 @@ import { AccountRole } from '@/models/AccountRole'
 import { RoleValue } from '@/models/RoleValue'
 
 import { hashPassword, verifyPassword } from '@shared/bcrypt'
-import { mailer } from '@shared/email'
+import { emailClient } from '@shared/email'
 import { JWT } from '@/shared/types/auth/JWT'
 import { generateRefreshToken, generateToken } from '@/shared/jwt'
 import { RefreshToken } from '@/models/RefreshToken'
@@ -149,11 +149,21 @@ export class AuthService implements IAuthService {
       await db<AccountRole>('account_roles').insert(accountRoles)
 
       //Send email
-      await mailer.sendMail({
-        from: 'from@me.com',
-        to: user.email,
-        subject: 'Activate account',
-        html: `<a href="http://${process.env.HOST}/api/auth/activate?ticket=${ticket}">Activate account</a>`,
+      await emailClient.send({
+        template: 'activate-account',
+        message: {
+          to: user.email,
+          headers: {
+            'x-ticket': {
+              prepared: true,
+              value: ticket,
+            },
+          },
+        },
+        locals: {
+          display_name: user.first_name + ' ' + user.last_name,
+          url: `http://${process.env.HOST}/api/auth/activate?ticket=${ticket}`,
+        },
       })
 
       response.payload = 'success'
