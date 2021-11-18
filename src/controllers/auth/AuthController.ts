@@ -42,4 +42,18 @@ export class AuthController {
       res.status(500).send(error)
     }
   }
+  public requestResetPassword = async (
+    req: Request,
+    res: Response
+  ): Promise<void> => {
+    const { email } = req.body
+    try {
+      serviceResponseHandler(
+        res,
+        await this.authService.requestPasswordReset(email)
+      )
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
 }

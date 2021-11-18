@@ -1,5 +1,7 @@
 import { Account } from '@models/Account'
+import db from './db'
 import { AccountValidation } from './types/auth/AccountValiation'
+import dayjs from 'dayjs'
 
 export const validateAccount = (
   should_be_active: boolean,
@@ -22,4 +24,16 @@ export const validateAccount = (
     response.is_valid = false
   }
   return response
+}
+
+export const updateTicket = async (
+  id?: string,
+  ticket?: string
+): Promise<void> => {
+  await db<Account>('accounts')
+    .where({ id })
+    .update({
+      ticket: ticket || null,
+      ticket_expires_at: ticket ? dayjs().add(1, 'day').toDate() : null,
+    })
 }

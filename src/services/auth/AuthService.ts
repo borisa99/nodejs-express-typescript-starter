@@ -16,7 +16,8 @@ import { emailClient } from '@shared/email'
 import { JWT } from '@/shared/types/auth/JWT'
 import { generateRefreshToken, generateToken } from '@/shared/jwt'
 import { RefreshToken } from '@/models/RefreshToken'
-import { validateAccount } from '@/shared/account'
+import { validateAccount, updateTicket } from '@/shared/account'
+import { AccountValidation } from '@/shared/types/auth/AccountValiation'
 @Service()
 export class AuthService implements IAuthService {
   async requestPasswordReset(email: string): Promise<ServiceResponse<string>> {
@@ -24,14 +25,21 @@ export class AuthService implements IAuthService {
     try {
       // Get account by email
       const account = await db<Account>('accounts').where({ email }).first()
-      // if account not found
-      if (!account) {
-        response.status = 400
-        response.error = 'Account does not exist'
-      }
-      // if account is already activated
 
-      return response
+      const accountValidation: AccountValidation = validateAccount(
+        true,
+        account
+      )
+      if (!accountValidation.is_valid) {
+        response.status = 400
+        response.error = accountValidation.message
+        return response
+      }
+      // Generate ticket
+      const ticket = uuidv4()
+      await updateTicket(account?.id, ticket)
+
+      response.payload = ticket
     } catch (error: any) {
       response.status = 500
       response.error = error.message
@@ -41,15 +49,21 @@ export class AuthService implements IAuthService {
   async refresh(refresh_token: string): Promise<ServiceResponse<JWT>> {
     const response: ServiceResponse<JWT> = new ServiceResponse<JWT>()
     try {
+      // Get account by refresh token
       const account = await db<RefreshToken>('refresh_tokens')
         .where({ refresh_token })
         .leftJoin('accounts', 'accounts.id', 'refresh_tokens.account_id')
         .first()
+      // if account not found
       if (!account) {
         response.status = 400
         response.error = 'Invalid refresh token'
         return response
       }
+
+      // TODO if refresh token is expired
+
+      //
       response.payload = {
         token: await generateToken(account.id),
         refresh_token: await generateRefreshToken(account.id),
@@ -64,21 +78,26 @@ export class AuthService implements IAuthService {
     const response: ServiceResponse<JWT> = new ServiceResponse<JWT>()
     try {
       const account = await db<Account>('accounts').where({ email }).first()
+      // if account not found
       if (!account) {
         response.status = 400
         response.error = 'Account does not exist'
         return response
       }
+      // if account is not active
       if (!account.is_active) {
         response.status = 400
         response.error = 'Account is not activated'
         return response
       }
+
+      // if password is incorrect
       if (!(await verifyPassword(password, account.password_hash))) {
         response.status = 400
         response.error = 'Invalid password'
         return response
       }
+      // Sign token and send to client
       response.payload = {
         token: await generateToken(account.id),
         refresh_token: await generateRefreshToken(account.id),
@@ -89,7 +108,6 @@ export class AuthService implements IAuthService {
     }
     return response
   }
-  // Activate user account
   async activate(ticket: string): Promise<ServiceResponse<string>> {
     const response: ServiceResponse<string> = new ServiceResponse<string>()
     try {
@@ -127,7 +145,6 @@ export class AuthService implements IAuthService {
     }
     return response
   }
-  // Register new user
   async register(user: RegisterUser): Promise<ServiceResponse<string>> {
     const response: ServiceResponse<string> = new ServiceResponse<string>()
     try {

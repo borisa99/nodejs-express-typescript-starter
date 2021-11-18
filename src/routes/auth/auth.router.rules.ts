@@ -29,4 +29,7 @@ export default {
       .isString()
       .withMessage('Refresh token must be valid'),
   ],
+  post_request_reset_password: [
+    body('email').notEmpty().isEmail().withMessage('Email must be valid'),
+  ],
 }
