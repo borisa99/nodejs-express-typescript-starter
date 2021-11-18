@@ -23,4 +23,10 @@ export default {
       .isString()
       .withMessage('Password must be valid'),
   ],
+  post_refresh: [
+    body('refresh_token')
+      .notEmpty()
+      .isString()
+      .withMessage('Refresh token must be valid'),
+  ],
 }

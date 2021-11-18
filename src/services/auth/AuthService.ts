@@ -15,8 +15,31 @@ import { hashPassword, verifyPassword } from '@shared/bcrypt'
 import { mailer } from '@shared/email'
 import { JWT } from '@/shared/types/auth/JWT'
 import { generateRefreshToken, generateToken } from '@/shared/jwt'
+import { RefreshToken } from '@/models/RefreshToken'
 @Service()
 export class AuthService implements IAuthService {
+  async refresh(refresh_token: string): Promise<ServiceResponse<JWT>> {
+    const response: ServiceResponse<JWT> = new ServiceResponse<JWT>()
+    try {
+      const account = await db<RefreshToken>('refresh_tokens')
+        .where({ refresh_token })
+        .leftJoin('accounts', 'accounts.id', 'refresh_tokens.account_id')
+        .first()
+      if (!account) {
+        response.status = 400
+        response.error = 'Invalid refresh token'
+        return response
+      }
+      response.payload = {
+        token: await generateToken(account.id),
+        refresh_token: await generateRefreshToken(account.id),
+      }
+    } catch (error: any) {
+      response.status = 500
+      response.error = error.message
+    }
+    return response
+  }
   async login(email: string, password: string): Promise<ServiceResponse<JWT>> {
     const response: ServiceResponse<JWT> = new ServiceResponse<JWT>()
     try {

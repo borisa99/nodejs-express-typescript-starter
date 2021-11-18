@@ -34,4 +34,12 @@ export class AuthController {
       res.status(500).send(error)
     }
   }
+  public refresh = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { refresh_token } = req.body
+      serviceResponseHandler(res, await this.authService.refresh(refresh_token))
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
 }
