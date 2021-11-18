@@ -1,16 +1,14 @@
-import db from './db'
 import { Account } from '@models/Account'
 import { AccountValidation } from './types/auth/AccountValiation'
 
-export const validateAccount = async (
+export const validateAccount = (
   should_be_active: boolean,
-  id?: string
-): Promise<AccountValidation> => {
+  account?: Account
+): AccountValidation => {
   const response: AccountValidation = {
     is_valid: true,
     message: '',
   }
-  const account = await db<Account>('accounts').where({ id }).first()
   if (!account) {
     response.message = 'Account not found'
     response.is_valid = false

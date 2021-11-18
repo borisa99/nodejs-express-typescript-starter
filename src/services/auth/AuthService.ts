@@ -16,6 +16,7 @@ import { emailClient } from '@shared/email'
 import { JWT } from '@/shared/types/auth/JWT'
 import { generateRefreshToken, generateToken } from '@/shared/jwt'
 import { RefreshToken } from '@/models/RefreshToken'
+import { validateAccount } from '@/shared/account'
 @Service()
 export class AuthService implements IAuthService {
   async requestPasswordReset(email: string): Promise<ServiceResponse<string>> {
@@ -95,19 +96,21 @@ export class AuthService implements IAuthService {
       // Get account by ticket
       const account = await db<Account>('accounts').where({ ticket }).first()
       const frontend_url = process.env.FRONTEND_URL
+
       // if account not found
-      if (!account) {
+      if (!validateAccount(false, account).is_valid) {
         response.status = 302
         response.payload = frontend_url + '/not-found'
         return response
       }
-      // if account is already activated
+
+      // if ticket is expired
       if (
-        account.ticket_expires_at &&
+        account?.ticket_expires_at &&
         account.ticket_expires_at < dayjs().toDate()
       ) {
         response.status = 302
-        response.payload = frontend_url + '/already-active'
+        response.payload = frontend_url + '/expired'
         return response
       }
       // Activate account
