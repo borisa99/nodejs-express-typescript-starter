@@ -37,3 +37,10 @@ export const updateTicket = async (
       ticket_expires_at: ticket ? dayjs().add(1, 'day').toDate() : null,
     })
 }
+
+export const isTicketValid = (expires_at?: Date | null) => {
+  if (!expires_at) {
+    return false
+  }
+  return expires_at < dayjs().toDate()
+}

@@ -16,7 +16,7 @@ import { emailClient } from '@shared/email'
 import { JWT } from '@/shared/types/auth/JWT'
 import { generateRefreshToken, generateToken } from '@/shared/jwt'
 import { RefreshToken } from '@/models/RefreshToken'
-import { validateAccount, updateTicket } from '@/shared/account'
+import { validateAccount, updateTicket, isTicketValid } from '@/shared/account'
 import { AccountValidation } from '@/shared/types/auth/AccountValiation'
 @Service()
 export class AuthService implements IAuthService {
@@ -140,10 +140,7 @@ export class AuthService implements IAuthService {
       }
 
       // if ticket is expired
-      if (
-        account?.ticket_expires_at &&
-        account.ticket_expires_at < dayjs().toDate()
-      ) {
+      if (isTicketValid(account?.ticket_expires_at)) {
         response.status = 302
         response.payload = frontend_url + '/expired'
         return response
