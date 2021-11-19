@@ -6,16 +6,25 @@ import { TokenPayload } from './types/auth/TokenPayload'
 import db from './db'
 
 import { RefreshToken } from '@/models/RefreshToken'
+import { RoleValue } from '@/models/RoleValue'
 
-export const generateTokenPayload = (account_id: string): TokenPayload => {
-  const tokenPayload: TokenPayload = {
-    id: account_id,
-    email: '',
-    first_name: '',
-    last_name: '',
-    avatar_url: '',
-    roles: [],
-  }
+export const generateTokenPayload = async (
+  account_id: string
+): Promise<TokenPayload> => {
+  const tokenPayload: TokenPayload = await db<TokenPayload>('accounts')
+    .select(
+      'users.id',
+      'accounts.email',
+      'users.first_name',
+      'users.last_name',
+      'users.avatar_url'
+    )
+    .leftJoin('users', 'accounts.user_id', 'users.id')
+    .where('accounts.id', account_id)
+    .first()
+  tokenPayload.roles = await db<RoleValue>('account_roles')
+    .select('role')
+    .where('account_id', account_id)
 
   return tokenPayload
 }
