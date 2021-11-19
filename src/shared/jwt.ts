@@ -14,6 +14,7 @@ export const generateTokenPayload = async (
   const tokenPayload: TokenPayload = await db<TokenPayload>('accounts')
     .select(
       'users.id',
+      'accounts.id as account_id',
       'accounts.email',
       'users.first_name',
       'users.last_name',
