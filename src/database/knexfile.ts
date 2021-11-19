@@ -6,7 +6,7 @@ import { resolve } from 'path'
 dotenv.config({ path: resolve(__dirname, '../../.env') })
 
 const config: Knex.Config = {
-  client: process.env.DATABASE_CLENT,
+  client: process.env.DATABASE_CLIENT,
   connection: {
     connectionString: process.env.DATABASE_URL
   },

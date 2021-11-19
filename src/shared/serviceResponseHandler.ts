@@ -5,8 +5,14 @@ export const serviceResponseHandler = (
   res: Response,
   data: ServiceResponse<any>
 ) => {
-  if (data.status !== 200) {
-    res.status(data.status).send(data)
+  if (data.status.toFixed().startsWith('4')) {
+    return res.status(data.status).send(data)
   }
-  res.send(data)
+  if (data.status.toFixed().startsWith('3')) {
+    res.writeHead(data.status, {
+      location: data.payload,
+    })
+    return res.end()
+  }
+  return res.send(data)
 }

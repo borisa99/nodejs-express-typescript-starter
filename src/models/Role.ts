@@ -1,4 +1,4 @@
+import { RoleValue } from './RoleValue'
 export interface Role {
-  role: string
-  comment: string
+  value: RoleValue
 }
