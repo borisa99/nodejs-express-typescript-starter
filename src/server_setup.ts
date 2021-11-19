@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express'
 import cors, { CorsOptions } from 'cors'
 import { validate } from './middleware/requestValidator'
 import auth from './middleware/auth'
+import { RoleValue } from './models/RoleValue'
+
 // Create the express app
 const app = express()
 const expressRouter = express.Router()
@@ -22,14 +24,17 @@ app.use(cors(corsOptions))
 app.get('/health', (req: Request, res: Response) => {
   res.send('OK')
 })
-
 // Router wrapper
 const router = {
   use(routeName: string, func: (req: Request, res: Response) => void) {
     expressRouter.use(routeName, validate, func)
   },
-  get(routeName: string, func: (req: Request, res: Response) => void) {
-    expressRouter.get(routeName, validate, auth, func)
+  get(
+    routeName: string,
+    func: (req: Request, res: Response) => void,
+    allowedRoles: RoleValue[] = []
+  ) {
+    expressRouter.get(routeName, validate, auth(allowedRoles), func)
   },
   post(routeName: string, func: (req: Request, res: Response) => void) {
     expressRouter.post(routeName, validate, func)

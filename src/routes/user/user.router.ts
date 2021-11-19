@@ -1,12 +1,6 @@
-// import { userController } from '@/controllers'
+import { userController } from '@/controllers'
 import { router } from '@/server_setup'
 
-import { Request, Response } from 'express'
-
-router.get('/me', (req: Request, res: Response) => {
-  console.log(req)
-
-  console.log(res.json)
-})
+router.get('/me', userController.me)
 
 export default router.getInstance()
