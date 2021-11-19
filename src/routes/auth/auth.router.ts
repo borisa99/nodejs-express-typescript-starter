@@ -1,4 +1,4 @@
-import { router } from '@/server_setup'
+import { router } from '@/router_wrapper'
 import { authController } from '@/controllers'
 
 router.post('/register', authController.register)

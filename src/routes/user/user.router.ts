@@ -1,5 +1,5 @@
 import { userController } from '@/controllers'
-import { router } from '@/server_setup'
+import { router } from '@/router_wrapper'
 
 router.get('/me', userController.me)
 
