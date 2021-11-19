@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import { v4 as uuidv4 } from 'uuid'
 import dayjs from 'dayjs'
 
-import { TokenPayload } from './types/auth/TokenPayload'
+import { GetUserPayload } from './types/auth/GetUserPayload'
 import db from './db'
 
 import { RefreshToken } from '@/models/RefreshToken'
@@ -10,8 +10,8 @@ import { RoleValue } from '@/models/RoleValue'
 
 export const generateTokenPayload = async (
   account_id: string
-): Promise<TokenPayload> => {
-  const tokenPayload: TokenPayload = await db<TokenPayload>('accounts')
+): Promise<GetUserPayload> => {
+  const tokenPayload: GetUserPayload = await db<GetUserPayload>('accounts')
     .select(
       'users.id',
       'accounts.id as account_id',
