@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express'
 import cors, { CorsOptions } from 'cors'
 import { validate } from './middleware/requestValidator'
+import auth from './middleware/auth'
 // Create the express app
 const app = express()
 const expressRouter = express.Router()
@@ -28,7 +29,7 @@ const router = {
     expressRouter.use(routeName, validate, func)
   },
   get(routeName: string, func: (req: Request, res: Response) => void) {
-    expressRouter.get(routeName, validate, func)
+    expressRouter.get(routeName, validate, auth, func)
   },
   post(routeName: string, func: (req: Request, res: Response) => void) {
     expressRouter.post(routeName, validate, func)

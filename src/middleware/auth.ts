@@ -2,7 +2,7 @@ import { ServiceResponse } from '@/models/ServiceResponse'
 import { serviceResponseHandler } from '@/shared/serviceResponseHandler'
 import jwt from 'jsonwebtoken'
 
-export const auth = (req: any, res: any, next: any) => {
+const auth = (req: any, res: any, next: any) => {
   const result: ServiceResponse<any> = new ServiceResponse<any>()
   try {
     const token = req.header('token')
@@ -26,3 +26,4 @@ export const auth = (req: any, res: any, next: any) => {
     result.status === 200 ? next() : serviceResponseHandler(res, result)
   }
 }
+export default auth
