@@ -4,10 +4,16 @@ import { serviceResponseHandler } from '@/shared/serviceResponseHandler'
 import { GetUserPayload } from '@/shared/types/auth/GetUserPayload'
 import jwt from 'jsonwebtoken'
 
-const auth = (allowedRoles: RoleValue[]) => {
+const auth = (allowedRoles: RoleValue[] = [], isPublic = false) => {
   return (req: any, res: any, next: any) => {
     const result: ServiceResponse<any> = new ServiceResponse<any>()
     try {
+      // Continue if public access is allowed
+      if (isPublic) {
+        next()
+      }
+
+      // Get token from header
       const token = req.header('token')
 
       // Check if token exists

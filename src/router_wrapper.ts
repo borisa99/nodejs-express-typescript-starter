@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
 import { validate } from './middleware/requestValidator'
 import auth from './middleware/auth'
-import { RoleValue } from './models/RoleValue'
+import { RouterWrapperParams } from './shared/types/RouterWrapperParams'
 
 // Create the express app
 const expressRouter = express.Router()
@@ -9,12 +9,13 @@ export const router = {
   use(routeName: string, func: (req: Request, res: Response) => void) {
     expressRouter.use(routeName, validate, func)
   },
-  get(
-    routeName: string,
-    func: (req: Request, res: Response) => void,
-    allowedRoles: RoleValue[] = []
-  ) {
-    expressRouter.get(routeName, validate, auth(allowedRoles), func)
+  get(params: RouterWrapperParams) {
+    expressRouter.get(
+      params.routeName,
+      validate,
+      auth(params.allowedRoles, params.isPublic),
+      params.handler
+    )
   },
   post(routeName: string, func: (req: Request, res: Response) => void) {
     expressRouter.post(routeName, validate, func)
