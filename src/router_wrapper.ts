@@ -17,8 +17,13 @@ export const router = {
       params.handler
     )
   },
-  post(routeName: string, func: (req: Request, res: Response) => void) {
-    expressRouter.post(routeName, validate, func)
+  post(params: RouterWrapperParams) {
+    expressRouter.post(
+      params.routeName,
+      validate,
+      auth(params.allowedRoles, params.isPublic),
+      params.handler
+    )
   },
   put(routeName: string, func: (req: Request, res: Response) => void) {
     expressRouter.put(routeName, validate, func)
