@@ -7,12 +7,11 @@ import jwt from 'jsonwebtoken'
 const auth = (allowedRoles: RoleValue[] = [], isPublic = false) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const result: ServiceResponse<any> = new ServiceResponse<any>()
-    try {
-      // Continue if public access is allowed
-      if (isPublic) {
-        next()
-      }
+    if (isPublic) {
+      return next()
+    }
 
+    try {
       const token: string | null =
         'token' in req.headers ? (req.headers.token as string) : null
 
