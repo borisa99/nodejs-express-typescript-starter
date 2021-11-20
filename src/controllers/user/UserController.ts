@@ -10,11 +10,8 @@ export class UserController {
 
   me = async (req: Request, res: Response): Promise<void> => {
     try {
-      // const { account_id } = req.user
-      serviceResponseHandler(
-        res,
-        await this.userService.me('15fa8e6f-fa38-45cc-94c2-0c5ec98ba61b')
-      )
+      const { account_id } = res.locals.user
+      serviceResponseHandler(res, await this.userService.me(account_id))
     } catch (error) {
       res.status(500).send(error)
     }
