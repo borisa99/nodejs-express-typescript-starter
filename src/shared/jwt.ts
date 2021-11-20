@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import { v4 as uuidv4 } from 'uuid'
 import dayjs from 'dayjs'
 
-import { TokenPayload } from './types/auth/TokenPayload'
+import { GetUserPayload } from './types/auth/GetUserPayload'
 import db from './db'
 
 import { RefreshToken } from '@/models/RefreshToken'
@@ -10,10 +10,11 @@ import { RoleValue } from '@/models/RoleValue'
 
 export const generateTokenPayload = async (
   account_id: string
-): Promise<TokenPayload> => {
-  const tokenPayload: TokenPayload = await db<TokenPayload>('accounts')
+): Promise<GetUserPayload> => {
+  const tokenPayload: GetUserPayload = await db<GetUserPayload>('accounts')
     .select(
       'users.id',
+      'accounts.id as account_id',
       'accounts.email',
       'users.first_name',
       'users.last_name',
@@ -22,9 +23,10 @@ export const generateTokenPayload = async (
     .leftJoin('users', 'accounts.user_id', 'users.id')
     .where('accounts.id', account_id)
     .first()
-  tokenPayload.roles = await db<RoleValue>('account_roles')
+  tokenPayload.roles  = await db<RoleValue>('account_roles')
     .select('role')
     .where('account_id', account_id)
+    .pluck('role')
 
   return tokenPayload
 }

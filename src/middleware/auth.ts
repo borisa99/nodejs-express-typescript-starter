@@ -1,28 +1,51 @@
+import { RoleValue } from '@/models/RoleValue'
 import { ServiceResponse } from '@/models/ServiceResponse'
 import { serviceResponseHandler } from '@/shared/serviceResponseHandler'
+import { NextFunction, Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
 
-export const auth = (req: any, res: any, next: any) => {
-  const result: ServiceResponse<any> = new ServiceResponse<any>()
-  try {
-    const token = req.header('token')
+const auth = (allowedRoles: RoleValue[] = [], isPublic = false) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const result: ServiceResponse<any> = new ServiceResponse<any>()
+    try {
+      // Continue if public access is allowed
+      if (isPublic) {
+        next()
+      }
 
-    // Check if token exists
-    if (!token) {
-      result.error = 'No token, authorization denied'
+      const token: string | null =
+        'token' in req.headers ? (req.headers.token as string) : null
+
+      let jwtPayload
+      const secret: string = process.env.JWT_SECRET || ''
+      if (token) {
+        // Check if token is valid
+        jwtPayload = <any>jwt.verify(token, secret)
+
+        // Check if user has the right role
+        if (
+          allowedRoles.length > 0 &&
+          !jwtPayload.roles.some((role: RoleValue) =>
+            allowedRoles.includes(role)
+          )
+        ) {
+          result.error = 'You are not authorized to access this resource'
+          result.status = 401
+        }
+        // // TODO Check if token is expired
+
+        res.locals.user = jwtPayload
+      } else {
+        result.error = 'No token, authorization denied'
+        result.status = 401
+      }
+    } catch (error: any) {
+      result.error = error.message
       result.status = 401
+    } finally {
+      result.status === 200 ? next() : serviceResponseHandler(res, result)
     }
-    // Check if token is valid
-    const decoded = jwt.verify(token, <string>process.env.JWT_SECRET)
-
-    // TODO Check if token is expired
-
-    // Set user to req
-    req.user = decoded
-  } catch (error: any) {
-    result.error = error.message
-    result.status = 401
-  } finally {
-    result.status === 200 ? next() : serviceResponseHandler(res, result)
   }
 }
+
+export default auth
