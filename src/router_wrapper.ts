@@ -25,11 +25,21 @@ export const router = {
       params.handler
     )
   },
-  put(routeName: string, func: (req: Request, res: Response) => void) {
-    expressRouter.put(routeName, validate, func)
+  put(params: RouterWrapperParams) {
+    expressRouter.put(
+      params.routeName,
+      validate,
+      auth(params.allowedRoles, params.isPublic),
+      params.handler
+    )
   },
-  delete(routeName: string, func: (req: Request, res: Response) => void) {
-    expressRouter.delete(routeName, validate, func)
+  delete(params: RouterWrapperParams) {
+    expressRouter.delete(
+      params.routeName,
+      validate,
+      auth(params.allowedRoles, params.isPublic),
+      params.handler
+    )
   },
   getInstance() {
     return expressRouter
