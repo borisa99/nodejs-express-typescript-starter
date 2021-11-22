@@ -69,10 +69,18 @@ npm run format - prettier format
 ```
 
 # How to extend
+
+### Create new service, controller and router
 1. Create `{service name}` directory in services
 2. Create `I{service name}Service.ts` in it and define methods
 3. Create `{service name}Service.ts` that extends interface and implement business logic
-4. 
+4. Create `{controller name}` directory in controllers
+5. Create `{controller name}Controller.ts` in that directory and define methods that call service methods wrapped in **serviceResponseHandler**
+6. Import that controller in `index.ts` file in controllers and export it from there
+4. Create `{router name}` directory in routers
+5. Create `{route name}.router.ts` in that directory and define routes using the **router_wrapper**
+6. Create `{route name}.router.rules.ts` and export object from it with route names and methods as keys and arrays of request rules as values
+7. import `{route.name}.router.ts` in `index.ts` in routes and use it in app
 
 # Database query - in progress
 
