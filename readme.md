@@ -62,6 +62,13 @@ npm run dev - if you want to run the app in development mode
 npm run start - run the app in production, requires additional configuration in .env
 ```
 
+# Other commands
+
+```
+npm run build - typescript complier
+npm run lint - eslint
+npm run format - prettier format
+```
 # Database query - in progress
 
 This application is using [knex](https://knexjs.org/#Builder-knex) as driver for database. You can use knex directly
