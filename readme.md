@@ -82,6 +82,7 @@ npm run format - prettier format
 6. Create `{route name}.router.rules.ts` and export object from it with route names and methods as keys and arrays of request rules as values
 7. import `{route.name}.router.ts` in `index.ts` in routes and use it in app
 
+All global plugins and helper functions are created in `shared` directory in separate directories and files
 # Database query - in progress
 
 This application is using [knex](https://knexjs.org/#Builder-knex) as driver for database. You can use knex directly
