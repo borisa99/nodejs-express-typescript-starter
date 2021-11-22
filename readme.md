@@ -43,9 +43,14 @@
          - naming convention - /**{ service name directory }** - lowercase  (ex. auth)
            - **{service name}Service.ts** (ex. AuthService)
            - **I{service name}Service.ts** - interface that service above implements (ex. IAuthService)
-       - **/ shared**
-       - **/ tests**
-
+       - **/ shared** - plugins, types, db instance, helper function - all things that need to be globally available 
+         - **types** - directory with all global types 
+         - **db.ts** - database instance using which we make all queries
+         - **email.ts** - mailing client 
+         - **jwt.ts** - JWT helper functions
+         - **lodash.ts** - export lodash instance
+         - **serviceResponseHandler.ts**  - handler for response call in controller which will return api response from its call
+       - **/ tests** - to be written
 # Database query
 
 This application is using [knex](https://knexjs.org/#Builder-knex) as driver for database. You can use knex directly
