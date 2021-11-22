@@ -50,13 +50,24 @@
          - **jwt.ts** - JWT helper functions
          - **lodash.ts** - export lodash instance
          - **serviceResponseHandler.ts**  - handler for response call in controller which will return api response from its call
-       - **/ tests** - to be written
-# Database query
+       - **/ tests** - to be written  
+
+
+# How to run
+
+```
+copy .env.example to .env 
+npm install
+npm run dev - if you want to run the app in development mode 
+npm run start - run the app in production, requires additional configuration in .env
+```
+
+# Database query - in progress
 
 This application is using [knex](https://knexjs.org/#Builder-knex) as driver for database. You can use knex directly
 from `shared/db.ts` file or you can create model and use it as instance.
 
-### DB Model based
+### DB Model based - in progress
 
 When using it over model. Class in question needs to extend base class, lest say we have class named user class will
 look like:
