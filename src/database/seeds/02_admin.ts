@@ -7,13 +7,11 @@ import { hashPassword } from '../../shared/bcrypt'
 import { RoleValue } from '../../models/RoleValue'
 
 export async function seed(knex: Knex): Promise<void> {
-  const adminEmail = 'admin@mail.com'
-  const adminPassword = '12345678'
+  const email = process.env.ADMIN_EMAIL
+  const password = <string>process.env.ADMIN_PASSWORD
 
   // Deletes ALL existing entries
-  const account = await knex<Account>('accounts')
-    .where({ email: adminEmail })
-    .first()
+  const account = await knex<Account>('accounts').where({ email }).first()
 
   if (account) {
     await knex<User>('users').where({ id: account.user_id }).del()
@@ -32,8 +30,8 @@ export async function seed(knex: Knex): Promise<void> {
     .returning('id')
     .insert({
       user_id,
-      email: adminEmail,
-      password_hash: await hashPassword(adminPassword),
+      email,
+      password_hash: await hashPassword(password),
       is_active: true,
     })
 
