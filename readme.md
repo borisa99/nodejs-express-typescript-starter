@@ -62,7 +62,7 @@ npm run dev - if you want to run the app in development mode
 npm run start - run the app in production, requires additional configuration in .env
 ```
 
-# Other commands
+### Other commands
 
 ```
 npm run build - typescript complier
