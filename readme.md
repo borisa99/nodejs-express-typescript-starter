@@ -55,6 +55,8 @@
 
 ```
 copy .env.example to .env 
+npm run knex migrate:latest
+npm run knex seed:run
 npm install
 npm run dev - if you want to run the app in development mode 
 npm run start - run the app in production, requires additional configuration in .env
