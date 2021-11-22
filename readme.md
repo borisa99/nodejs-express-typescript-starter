@@ -16,8 +16,8 @@
        - Second nested list item
      - **/ src**
        - **/ controllers** -- Class based controllers whos methods get called from router 
-         - All controllers get loaded from index.ts one
-         - Naming convention - **/{route name directory-lowercase}/{ Route Name }Controller** - camel case 
+         - all controllers get loaded from index.ts one
+         - naming convention - **/{route name directory-lowercase}/{ Route Name }Controller** - camel case 
          - ex. **/auth/AuthController**
        - **/ database** - Database driver configuration file, migrations and seeds
          - enviroment variables required - **DATABASE_CLIENT**, **DATABASE_URL** - connection string
@@ -32,7 +32,12 @@
          - auth.ts - global authentication middleware that validates user and his access permission
          - requestValidator.ts - global middleware that automatically loads **{route name}.router.rules.ts**  file and validates incoming request based on its rules
        - **/ models** - For each database table there should be corresponding **ts** file.
-       - **/ routes** - 
+       - **/ routes** - API routes defintions
+         - naming convention - **/{route name directory}/** - lowercase
+           - **{route name}.router.ts** - place where you define all routes for router ( ex. auth.router.ts ) - lowercase
+           - **{route name}.router.rules.ts** - rules for the router routes (ex. auth.router.rules.ts )
+             - exports object whos keys are route definitions which have value of validation rules as array
+             - object key naming convention - **{ method }_{ route name }** (ex. auth_register):[] 
        - **/ services** 
        - **/ shared**
        - **/ tests**
