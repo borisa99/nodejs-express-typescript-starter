@@ -28,13 +28,14 @@
            - **npm run knex seed:run** - run all seeds from /seeds directory
            - **npm run knex seed:run --specific=seed-filename.ts** - Runs a specific seed file
           - knex cheatsheet - https://devhints.io/knex
-       - **/ middleware**
-       - **/ models**
-       - **/ routes**
+       - **/ middleware** - gloabl and route level middleware
+         - auth.ts - global authentication middleware that validates user and his access permission
+         - requestValidator.ts - global middleware that automatically loads **{route name}.router.rules.ts**  file and validates incoming request based on its rules
+       - **/ models** - For each database table there should be corresponding **ts** file.
+       - **/ routes** - 
        - **/ services** 
        - **/ shared**
        - **/ tests**
-
 
 # Database query
 
