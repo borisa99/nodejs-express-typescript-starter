@@ -19,7 +19,15 @@
          - All controllers get loaded from index.ts one
          - Naming convention - **/{route name directory-lowercase}/{ Route Name }Controller** - camel case 
          - ex. **/auth/AuthController**
-       - **/ database** - 
+       - **/ database** - Database driver configuration file, migrations and seeds
+         - enviroment variables required - **DATABASE_CLIENT**, **DATABASE_URL** - connection string
+         - commands
+           - **npm run knex migrate:latest** - apply migrations
+           - **npm run knex migrate:rollback** - revert latest migration
+           - **npm run knex migrate:make migration_name** - create new migration
+           - **npm run knex seed:run** - run all seeds from /seeds directory
+           - **npm run knex seed:run --specific=seed-filename.ts** - Runs a specific seed file
+          - knex cheatsheet - https://devhints.io/knex
        - **/ middleware**
        - **/ models**
        - **/ routes**
