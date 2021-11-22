@@ -83,6 +83,28 @@ npm run format - prettier format
 7. import `{route.name}.router.ts` in `index.ts` in routes and use it in app
 
 All global plugins and helper functions are created in `shared` directory in separate directories and files
+
+# Routes 
+
+**/api/auth**
+______________________
+
+| Route | Description | Params | Public |
+| ----- | ----------- | ------ | --------- |
+| / register | register a new user | user: RegisterUser.ts | true |
+| / activate | activate users account | ticket: string | true |
+| / login | login existing user | username: string, password: string | true |
+| / refresh | refresh users jwt | refresh_token: string | true |
+| / request_reset_password | request reset user passowrd reset | email: string | true |
+| / reset_password | reset users password | ticket: string, password: string | true |
+
+**/api/user**
+______________________
+| Route | Description | Params | Public |
+| ----- | ----------- | ------ | ------ |
+| / me | get current user | / | false |
+
+*Non public routes require JWT to be passed in headers in token key
 # Database query - in progress
 
 This application is using [knex](https://knexjs.org/#Builder-knex) as driver for database. You can use knex directly
