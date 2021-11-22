@@ -38,7 +38,11 @@
            - **{route name}.router.rules.ts** - rules for the router routes (ex. auth.router.rules.ts )
              - exports object whos keys are route definitions which have value of validation rules as array
              - object key naming convention - **{ method }_{ route name }** (ex. auth_register):[] 
-       - **/ services** 
+           -  all **router.ts** files should be imported into **routes/index.ts** file
+       - **/ services** - Microservices for each db model of separate feature
+         - naming convention - /**{ service name directory }** - lowercase  (ex. auth)
+           - **{service name}Service.ts** (ex. AuthService)
+           - **I{service name}Service.ts** - interface that service above implements (ex. IAuthService)
        - **/ shared**
        - **/ tests**
 
